@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_BDC</CLSNAME>
+    <LANGU>S</LANGU>
+    <DESCRIPT>Batch input con CALL TRANSACTION</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>ADD_LOG</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Agrega un mensaje al log, si hay log</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CALL</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Ejecuta la transacción con los datos BDC</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Transacción y opciones de CALL TRANSACTION</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CURSOR</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Posiciona el cursor (BDC_CURSOR)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>DYNPRO</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Agrega el inicio de una pantalla</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>FIELD</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Agrega un campo con su valor externo</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BDCDATA</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Devuelve los datos BDC pendientes</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MESSAGES</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Devuelve los mensajes de la última ejecución</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>HAS_ERROR</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Hay mensajes de tipo E o A</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>HAS_MSG</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Existe un mensaje con los filtros dados</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>OKCODE</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Agrega un código de función (BDC_OKCODE)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFRESH</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Limpia datos BDC y mensajes</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_LOG</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Asigna el log de aplicación</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_OK_MSG</CMPNAME>
+     <LANGU>S</LANGU>
+     <DESCRIPT>Mensaje que indica éxito de la transacción</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
