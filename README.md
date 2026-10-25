@@ -37,6 +37,16 @@ Dependencias:
 - [zcl_log](https://github.com/ricardopsj/zcl_log): log de aplicación.
 - [zcl_ce](https://github.com/ricardopsj/zcl_ce): conversión de valores a formato externo. `zcl_log` ya depende de ella.
 
+Importar primero `zcl_ce` y `zcl_log`.
+
+## Objetos del paquete
+
+| Objeto | Tipo | Descripción |
+|---|---|---|
+| `ZCL_BDC` | Clase | Armado y ejecución del batch input |
+| `ZCL_BDC` | Clase de mensajes | Mensajes propios de la clase (ver más abajo) |
+| `ZBDC_DEMO1` | Programa | Demo: recorre una clase en `SE24` (ver *Demo*) |
+
 ## API
 
 | Método | Descripción |
@@ -50,13 +60,30 @@ Dependencias:
 | `set_ok_msg( id, no, ty )` | Define el mensaje que indica éxito (tipo `S` por defecto) |
 | `has_msg( id, no, ty )` | Indica si la última ejecución dio un mensaje con esos datos; los parámetros omitidos no filtran |
 | `has_error( )` | Indica si la última ejecución dio mensajes de tipo `E` o `A` |
-| `get_messages( )` / `get_bdcdata( )` | Mensajes de la última ejecución / datos BDC pendientes |
+| `get_messages( ) → tt_bdcmsgcoll` / `get_bdcdata( ) → tt_bdcdata` | Mensajes de la última ejecución / datos BDC pendientes |
 | `set_log( ref_log )` | Asigna o cambia el log |
 | `refresh( )` | Limpia datos BDC, mensajes y código de retorno. No toca el log |
 
 `dynpro`, `field`, `okcode` y `cursor` devuelven la misma instancia, así que se pueden encadenar.
 
-Atributos de solo lectura: `tcode`, `s_params` (`CTU_PARAMS`), `subrc` (`SY-SUBRC` de la última ejecución) y `ref_log`. Las constantes `c-dismode-*` y `c-updmode-*` nombran los modos.
+Atributos de solo lectura: `tcode`, `s_params` (`CTU_PARAMS`), `subrc` (`SY-SUBRC` de la última ejecución) y `ref_log`. Las constantes `c-dismode-*` y `c-updmode-*` nombran los modos. Los tipos `tt_bdcdata` y `tt_bdcmsgcoll` son tablas estándar de `BDCDATA` y `BDCMSGCOLL`.
+
+## De una grabación SHDB a `zcl_bdc`
+
+Cada línea de la grabación se traduce así:
+
+| Grabación | `zcl_bdc` |
+|---|---|
+| Línea con programa, dynpro y `X` | `dynpro( program = ... dynpro = ... )` |
+| `BDC_OKCODE` | `okcode( '...' )`, tal cual (incluido el `=` o `/` inicial) |
+| `BDC_CURSOR` | `cursor( '...' )`. Necesario cuando el código de función actúa sobre la línea del cursor (doble clic, `=OO_PICKUP`, etc.); en otro caso se puede omitir |
+| `BDC_SUBSCR` | Se puede omitir: solo informa qué subpantalla estaba activa |
+| Campo con valor | `field( fnam = ... fval = ... )` |
+
+- **Valores grabados:** ya están en formato externo (como se teclearon). Para pasarlos tal cual, usar `conv = abap_false`. Con variables del programa en formato interno (fechas, importes, números con `ALPHA`), dejar la conversión por defecto.
+- **Índices de table control** (`CAMPO(01)`): se refieren a la línea visible, no a la fila de la tabla. Para llegar más abajo hay que paginar o usar la búsqueda de la transacción.
+- **Pantallas que dependen del usuario:** una grabación refleja la configuración de quien la hizo (por ejemplo, el editor con el que abre `SE24`). Si cambia entre usuarios, conviene parametrizar esos pasos, como hace `ZBDC_DEMO1` con `p_srce`.
+- **Leer la grabación sin SHDB:** queda guardada como juego de datos de batch input: cabecera en `APQI` (`GROUPID` = nombre de la grabación) y una fila de `APQD` por pantalla.
 
 ## Cuándo `call( )` devuelve `abap_true`
 
