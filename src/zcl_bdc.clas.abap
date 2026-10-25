@@ -19,6 +19,9 @@ class zcl_bdc definition
         , end of updmode
       , end of c .
 
+    types tt_bdcdata type standard table of bdcdata with default key .
+    types tt_bdcmsgcoll type standard table of bdcmsgcoll with default key .
+
     data s_params type ctu_params read-only .
     data tcode type tcode read-only .
     data subrc type sysubrc read-only .
@@ -83,15 +86,15 @@ class zcl_bdc definition
         !ref_log type ref to zcl_log .
     methods get_bdcdata
       returning
-        value(t_bdcdata) type tab_bdcdata .
+        value(t_bdcdata) type tt_bdcdata .
     methods get_messages
       returning
-        value(t_msg) type tab_bdcmsgcoll .
+        value(t_msg) type tt_bdcmsgcoll .
     methods refresh .
   protected section.
 
-    data t_bdcdata type tab_bdcdata .
-    data t_msg type tab_bdcmsgcoll .
+    data t_bdcdata type tt_bdcdata .
+    data t_msg type tt_bdcmsgcoll .
     data:
       begin of s_ok_msg
         , id type msgid
@@ -204,9 +207,14 @@ CLASS ZCL_BDC IMPLEMENTATION.
 
   method field.
     " Los valores se pasan en formato externo (como los teclearía el usuario)
-    data(fval_ext) = cond string( when fval is initial  then ``
-                                  when conv = abap_true then zcl_ce=>output_string( input = fval waers = waers )
-                                  else                       |{ fval }| ).
+    data(fval_ext) = cond string( when fval is not initial then |{ fval }| ).
+    if conv = abap_true and fval is not initial.
+      try.
+          fval_ext = zcl_ce=>output_string( input = fval waers = waers ).
+        catch zcx_ce_t100.
+          " Sin conversión posible se envía el valor tal cual
+      endtry.
+    endif.
     if maxlen > 0 and strlen( fval_ext ) > maxlen.
       fval_ext = substring( val = fval_ext len = maxlen ).
     endif.

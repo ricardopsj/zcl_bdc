@@ -43,7 +43,7 @@ Dependencias:
 |---|---|
 | `constructor( tcode, dismode, updmode, cattmode, defsize, racommit, nobinpt, nobiend, ref_log )` | Transacción y opciones de `CTU_PARAMS`. Por defecto: sin pantallas (`N`), actualización síncrona (`S`), tamaño de pantalla estándar. `ref_log` es opcional |
 | `dynpro( program, dynpro )` | Agrega el inicio de una pantalla |
-| `field( fnam, fval, conv, waers, maxlen )` | Agrega un campo. Con `conv = abap_true` (por defecto) el valor se pasa a formato externo con `zcl_ce=>output_string`: fechas, importes (con `waers`), cantidades y campos con rutina de conversión quedan como los teclearía el usuario. `maxlen` corta el valor a ese largo. Un valor inicial se envía vacío |
+| `field( fnam, fval, conv, waers, maxlen )` | Agrega un campo. Con `conv = abap_true` (por defecto) el valor se pasa a formato externo con `zcl_ce=>output_string`: fechas, importes (con `waers`), cantidades y campos con rutina de conversión quedan como los teclearía el usuario; si la conversión falla se envía el valor tal cual. `maxlen` corta el valor a ese largo. Un valor inicial se envía vacío |
 | `okcode( fcode )` | Agrega `BDC_OKCODE` |
 | `cursor( fnam )` | Agrega `BDC_CURSOR` |
 | `call( ) → ok` | Ejecuta la transacción (`WITH AUTHORITY-CHECK`), pasa todos sus mensajes al log y limpia los datos BDC para la siguiente ejecución |
@@ -75,4 +75,4 @@ Atributos de solo lectura: `tcode`, `s_params` (`CTU_PARAMS`), `subrc` (`SY-SUBR
 
 ## Origen
 
-Inspirada en `ZCL_UTL_BDC`. Cambios principales: usa `zcl_log` en lugar de `ZCL_UTL_MSG`, `zcl_ce` en lugar de `ZUTL_CONVERSION_EXIT_OUTPUT`, tipos estándar `TAB_BDCDATA` / `TAB_BDCMSGCOLL`, métodos encadenables, `call( )` devuelve un indicador de éxito y `CALL TRANSACTION` verifica autorización.
+Inspirada en `ZCL_UTL_BDC`. Cambios principales: usa `zcl_log` en lugar de `ZCL_UTL_MSG`, `zcl_ce` en lugar de `ZUTL_CONVERSION_EXIT_OUTPUT`, tipos tabla propios `tt_bdcdata` / `tt_bdcmsgcoll` (no todos los releases tienen `TAB_BDCDATA`), métodos encadenables, `call( )` devuelve un indicador de éxito y `CALL TRANSACTION` verifica autorización.
