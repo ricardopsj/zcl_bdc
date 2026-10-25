@@ -65,9 +65,9 @@ class zcl_bdc definition
         value(ok) type abap_bool .
     methods has_msg
       importing
-        !msgid        type msgid optional
-        !msgno        type msgno optional
-        !msgty        type msgty optional
+        !id           type msgid optional
+        !no           type msgno optional
+        !ty           type msgty optional
       returning
         value(has_it) type abap_bool .
     methods has_error
@@ -75,9 +75,9 @@ class zcl_bdc definition
         value(has_it) type abap_bool .
     methods set_ok_msg
       importing
-        !msgid type msgid
-        !msgno type msgno
-        !msgty type msgty default 'S' .
+        !id type msgid
+        !no type msgno
+        !ty type msgty default 'S' .
     methods set_log
       importing
         !ref_log type ref to zcl_log .
@@ -94,20 +94,20 @@ class zcl_bdc definition
     data t_msg type tab_bdcmsgcoll .
     data:
       begin of s_ok_msg
-        , msgid type msgid
-        , msgno type msgno
-        , msgty type msgty
+        , id type msgid
+        , no type msgno
+        , ty type msgty
         , end of s_ok_msg .
 
     methods add_log
       importing
-        !msgid type clike
-        !msgno type clike
-        !msgty type clike
-        !msgv1 type clike optional
-        !msgv2 type clike optional
-        !msgv3 type clike optional
-        !msgv4 type clike optional .
+        !id type clike
+        !no type clike
+        !ty type clike
+        !v1 type clike optional
+        !v2 type clike optional
+        !v3 type clike optional
+        !v4 type clike optional .
   private section.
 ENDCLASS.
 
@@ -118,13 +118,13 @@ CLASS ZCL_BDC IMPLEMENTATION.
 
   method add_log.
     if ref_log is bound.
-      ref_log->add_msg( msgid = msgid
-                        msgno = msgno
-                        msgty = msgty
-                        msgv1 = msgv1
-                        msgv2 = msgv2
-                        msgv3 = msgv3
-                        msgv4 = msgv4 ).
+      ref_log->add_msg( msgid = id
+                        msgno = no
+                        msgty = ty
+                        msgv1 = v1
+                        msgv2 = v2
+                        msgv3 = v3
+                        msgv4 = v4 ).
     endif.
   endmethod.
 
@@ -141,34 +141,34 @@ CLASS ZCL_BDC IMPLEMENTATION.
       catch cx_sy_authorization_error.
         subrc = 4.
         clear t_bdcdata.
-        add_log( msgid = 'ZCL_BDC' msgno = '003' msgty = 'E' msgv1 = tcode ). " Sin autorización para la transacción &1
+        add_log( id = 'ZCL_BDC' no = '003' ty = 'E' v1 = tcode ). " Sin autorización para la transacción &1
         return.
     endtry.
     clear t_bdcdata.
 
     loop at t_msg reference into data(ref_msg).
-      add_log( msgid = ref_msg->msgid
-               msgno = ref_msg->msgnr
-               msgty = ref_msg->msgtyp
-               msgv1 = ref_msg->msgv1
-               msgv2 = ref_msg->msgv2
-               msgv3 = ref_msg->msgv3
-               msgv4 = ref_msg->msgv4 ).
+      add_log( id = ref_msg->msgid
+               no = ref_msg->msgnr
+               ty = ref_msg->msgtyp
+               v1 = ref_msg->msgv1
+               v2 = ref_msg->msgv2
+               v3 = ref_msg->msgv3
+               v4 = ref_msg->msgv4 ).
     endloop.
 
     if s_ok_msg is not initial.
       " Con mensaje de éxito definido, solo cuenta que haya aparecido: muchas
       " transacciones terminan con SY-SUBRC 1001 aunque hayan grabado.
-      ok = has_msg( msgid = s_ok_msg-msgid msgno = s_ok_msg-msgno msgty = s_ok_msg-msgty ).
+      ok = has_msg( id = s_ok_msg-id no = s_ok_msg-no ty = s_ok_msg-ty ).
       if ok = abap_false.
-        add_log( msgid = 'ZCL_BDC' msgno = '001' msgty = 'E' " No se obtuvo el mensaje esperado &1 &2 en la transacción &3
-                 msgv1 = s_ok_msg-msgid msgv2 = s_ok_msg-msgno msgv3 = tcode ).
+        add_log( id = 'ZCL_BDC' no = '001' ty = 'E' " No se obtuvo el mensaje esperado &1 &2 en la transacción &3
+                 v1 = s_ok_msg-id v2 = s_ok_msg-no v3 = tcode ).
       endif.
     else.
       ok = xsdbool( subrc = 0 and has_error( ) = abap_false ).
       if ok = abap_false and has_error( ) = abap_false.
-        add_log( msgid = 'ZCL_BDC' msgno = '002' msgty = 'E' " La transacción &1 terminó con código de retorno &2
-                 msgv1 = tcode msgv2 = |{ subrc }| ).
+        add_log( id = 'ZCL_BDC' no = '002' ty = 'E' " La transacción &1 terminó con código de retorno &2
+                 v1 = tcode v2 = |{ subrc }| ).
       endif.
     endif.
   endmethod.
@@ -234,9 +234,9 @@ CLASS ZCL_BDC IMPLEMENTATION.
 
   method has_msg.
     loop at t_msg reference into data(ref_msg).
-      if ( msgid is not supplied or ref_msg->msgid  = msgid )
-     and ( msgno is not supplied or ref_msg->msgnr  = msgno )
-     and ( msgty is not supplied or ref_msg->msgtyp = msgty ).
+      if ( id is not supplied or ref_msg->msgid  = id )
+     and ( no is not supplied or ref_msg->msgnr  = no )
+     and ( ty is not supplied or ref_msg->msgtyp = ty ).
         has_it = abap_true.
         return.
       endif.
@@ -260,8 +260,8 @@ CLASS ZCL_BDC IMPLEMENTATION.
 
 
   method set_ok_msg.
-    s_ok_msg-msgid = msgid.
-    s_ok_msg-msgno = msgno.
-    s_ok_msg-msgty = msgty.
+    s_ok_msg-id = id.
+    s_ok_msg-no = no.
+    s_ok_msg-ty = ty.
   endmethod.
 ENDCLASS.

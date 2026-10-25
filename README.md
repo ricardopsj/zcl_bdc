@@ -18,7 +18,7 @@ ref_bdc->dynpro( program = 'SAPMF05A' dynpro = '0100'
       )->okcode( '/00' ).
 " ... más pantallas ...
 
-ref_bdc->set_ok_msg( msgid = 'F5' msgno = '312' ).   " Documento &1 se contabilizó en sociedad &2
+ref_bdc->set_ok_msg( id = 'F5' no = '312' ).   " Documento &1 se contabilizó en sociedad &2
 
 if ref_bdc->call( ).
   " grabó
@@ -47,8 +47,8 @@ Dependencias:
 | `okcode( fcode )` | Agrega `BDC_OKCODE` |
 | `cursor( fnam )` | Agrega `BDC_CURSOR` |
 | `call( ) → ok` | Ejecuta la transacción (`WITH AUTHORITY-CHECK`), pasa todos sus mensajes al log y limpia los datos BDC para la siguiente ejecución |
-| `set_ok_msg( msgid, msgno, msgty )` | Define el mensaje que indica éxito (tipo `S` por defecto) |
-| `has_msg( msgid, msgno, msgty )` | Indica si la última ejecución dio un mensaje con esos datos; los parámetros omitidos no filtran |
+| `set_ok_msg( id, no, ty )` | Define el mensaje que indica éxito (tipo `S` por defecto) |
+| `has_msg( id, no, ty )` | Indica si la última ejecución dio un mensaje con esos datos; los parámetros omitidos no filtran |
 | `has_error( )` | Indica si la última ejecución dio mensajes de tipo `E` o `A` |
 | `get_messages( )` / `get_bdcdata( )` | Mensajes de la última ejecución / datos BDC pendientes |
 | `set_log( ref_log )` | Asigna o cambia el log |
