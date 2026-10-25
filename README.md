@@ -64,6 +64,16 @@ Atributos de solo lectura: `tcode`, `s_params` (`CTU_PARAMS`), `subrc` (`SY-SUBR
 - **Sin `set_ok_msg`:** si `SY-SUBRC = 0` y no hubo mensajes de tipo `E` ni `A`. Si falla sin un mensaje de error de la transacción, se agrega `ZCL_BDC 002` con el código de retorno.
 - **Sin autorización** para la transacción: devuelve `abap_false`, deja `subrc = 4` y agrega `ZCL_BDC 003`.
 
+## Demo
+
+`ZBDC_DEMO1` abre una clase en `SE24` en modo visualización (solo consulta, no modifica datos):
+
+- Pide la clase (por defecto `ZCL_BDC`), el modo de visualización (todas las pantallas, solo errores o fondo) y, opcionalmente, objeto y subobjeto de SLG0 para grabar el log.
+- Llena la pantalla inicial del Class Builder (`SAPLSEOD 1000`, campo `SEOCLASS-CLSNAME`) y pulsa Visualizar (`=WB_DISPLAY`).
+- Con todas las pantallas la clase queda abierta y el usuario sale de `SE24` con F3; el éxito se decide por `SY-SUBRC` y la ausencia de errores.
+- En fondo o solo errores usa como mensaje de éxito `00 344` ("No hay datos de batch input para la pantalla..."): si la clase existe, `SE24` pasa a visualizarla y termina con ese mensaje por falta de datos BDC.
+- Al final agrega una línea con el resultado y `SY-SUBRC` y muestra el log.
+
 ## Clase de mensajes `ZCL_BDC`
 
 | N.º | Texto |
