@@ -14,7 +14,7 @@
     <item>
      <ID>I</ID>
      <KEY>B01</KEY>
-     <ENTRY>Clase a visualizar</ENTRY>
+     <ENTRY>Clase</ENTRY>
      <LENGTH>30</LENGTH>
     </item>
     <item>
@@ -37,6 +37,12 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>E02</KEY>
+     <ENTRY>Métodos a visualizar: entre 1 y 10</ENTRY>
+     <LENGTH>60</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>M01</KEY>
      <ENTRY>Ejecución correcta</ENTRY>
      <LENGTH>40</LENGTH>
@@ -49,8 +55,8 @@
     </item>
     <item>
      <ID>R</ID>
-     <ENTRY>Prueba de ZCL_BDC con SE24</ENTRY>
-     <LENGTH>26</LENGTH>
+     <ENTRY>Prueba de ZCL_BDC: recorre una clase en SE24</ENTRY>
+     <LENGTH>45</LENGTH>
     </item>
     <item>
      <ID>S</ID>
@@ -73,6 +79,12 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>P_METH</KEY>
+     <ENTRY>Métodos a visualizar</ENTRY>
+     <LENGTH>28</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>P_NOTHIN</KEY>
      <ENTRY>Fondo, sin pantallas</ENTRY>
      <LENGTH>28</LENGTH>
@@ -89,6 +101,12 @@
      <KEY>P_SAVE</KEY>
      <ENTRY>Grabar log</ENTRY>
      <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_SRCE</KEY>
+     <ENTRY>SE24 abre editor fuente</ENTRY>
+     <LENGTH>31</LENGTH>
     </item>
     <item>
      <ID>S</ID>

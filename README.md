@@ -66,12 +66,17 @@ Atributos de solo lectura: `tcode`, `s_params` (`CTU_PARAMS`), `subrc` (`SY-SUBR
 
 ## Demo
 
-`ZBDC_DEMO1` abre una clase en `SE24` en modo visualización (solo consulta, no modifica datos):
+`ZBDC_DEMO1` recorre una clase en `SE24` (solo consulta, no modifica datos). Está basado en la grabación SHDB `ZCL_BDC`:
 
-- Pide la clase (por defecto `ZCL_BDC`), el modo de visualización (todas las pantallas, solo errores o fondo) y, opcionalmente, objeto y subobjeto de SLG0 para grabar el log.
-- Llena la pantalla inicial del Class Builder (`SAPLSEOD 1000`, campo `SEOCLASS-CLSNAME`) y pulsa Visualizar (`=WB_DISPLAY`).
-- Con todas las pantallas la clase queda abierta y el usuario sale de `SE24` con F3; el éxito se decide por `SY-SUBRC` y la ausencia de errores.
-- En fondo o solo errores usa como mensaje de éxito `00 344` ("No hay datos de batch input para la pantalla..."): si la clase existe, `SE24` pasa a visualizarla y termina con ese mensaje por falta de datos BDC.
+| Pantalla | Acción |
+|---|---|
+| `SAPLSEOD 1000` | Nombre de la clase en `SEOCLASS-CLSNAME` y Visualizar (`=WB_DISPLAY`) |
+| `SAPLSEO_CLASS_EDITOR 0400` | Solo si `SE24` abre el editor basado en fuente: cambia a basado en formulario (`=OO_TOGGLE_CB_MODE`) |
+| `SAPLSEOD 2000` + `SAPLSEO_CLEDITOR 0200` | Por cada método: cursor en `DY_0253-CPDNAME(nn)`, doble clic (`=OO_PICKUP`) y volver (`/EWB_BACK`) |
+| `SAPLSEOD 2000` → `0400` → `1000` | Volver (`=WB_BACK` / `/EWB_BACK`) hasta salir de `SE24` |
+
+- Parámetros: clase (por defecto `ZCL_BDC`), cantidad de métodos a visualizar (1 a 10, son líneas visibles del table control), si `SE24` abre el editor basado en fuente (depende de la configuración del usuario), modo de visualización y, opcionalmente, objeto y subobjeto de SLG0 para grabar el log.
+- Como el recorrido sale de la transacción, el éxito se decide por `SY-SUBRC = 0` sin mensajes de error; no hace falta `set_ok_msg`.
 - Al final agrega una línea con el resultado y `SY-SUBRC` y muestra el log.
 
 ## Clase de mensajes `ZCL_BDC`

@@ -1,14 +1,17 @@
 *&---------------------------------------------------------------------*
 *& Report ZBDC_DEMO1
 *&---------------------------------------------------------------------*
-*& Prueba de ZCL_BDC: abre una clase en SE24 en modo visualización.
-*& Solo consulta, no modifica datos. Los mensajes quedan en ZCL_LOG.
+*& Prueba de ZCL_BDC: abre una clase en SE24, visualiza el código de
+*& sus primeros métodos y sale de la transacción. Basado en la grabación
+*& SHDB ZCL_BDC. Solo consulta, no modifica datos.
 *&---------------------------------------------------------------------*
 report zbdc_demo1.
 
 selection-screen begin of block b01 with frame title text-b01.
 parameters:
-  p_class type seoclsname obligatory default 'ZCL_BDC'.
+  p_class type seoclsname obligatory default 'ZCL_BDC',
+  p_meth  type i obligatory default 3,
+  p_srce  as checkbox default 'X'.
 selection-screen end of block b01.
 
 selection-screen begin of block b02 with frame title text-b02.
@@ -29,6 +32,9 @@ at selection-screen.
   if p_save = abap_true and p_object is initial.
     message text-e01 type 'E'. " Para grabar el log indique el objeto (SLG0)
   endif.
+  if p_meth not between 1 and 10.
+    message text-e02 type 'E'. " Métodos a visualizar: entre 1 y 10
+  endif.
 
 start-of-selection.
   data(ref_log) = new zcl_log( ).
@@ -44,18 +50,38 @@ start-of-selection.
                                                  else                          zcl_bdc=>c-dismode-nothing )
                                ref_log = ref_log ).
 
-  " Pantalla inicial del Class Builder: nombre de la clase y botón Visualizar (F7)
+  " Pantalla inicial del Class Builder: nombre de la clase y Visualizar (F7)
   ref_bdc->dynpro( program = 'SAPLSEOD' dynpro = '1000'
         )->field( fnam = 'SEOCLASS-CLSNAME' fval = p_class
         )->okcode( '=WB_DISPLAY' ).
 
-  " Sin pantallas, si la clase existe SE24 pasa a visualizarla y, como no hay
-  " más datos BDC, termina con el mensaje 00 344: eso indica que se abrió.
-  " Con todas las pantallas el usuario sigue en SE24 y sale con F3.
-  if p_all = abap_false.
-    ref_bdc->set_ok_msg( id = '00' no = '344' ).
+  " Si SE24 abre el editor basado en fuente, se cambia a basado en formulario
+  if p_srce = abap_true.
+    ref_bdc->dynpro( program = 'SAPLSEO_CLASS_EDITOR' dynpro = '0400'
+          )->okcode( '=OO_TOGGLE_CB_MODE' ).
   endif.
 
+  " Pestaña Métodos: doble clic en cada método y volver con F3.
+  " El índice es la línea visible del table control, por eso el máximo de 10.
+  do p_meth times.
+    ref_bdc->dynpro( program = 'SAPLSEOD' dynpro = '2000'
+          )->cursor( |DY_0253-CPDNAME({ sy-index width = 2 align = right pad = '0' })|
+          )->okcode( '=OO_PICKUP'
+          )->dynpro( program = 'SAPLSEO_CLEDITOR' dynpro = '0200'
+          )->okcode( '/EWB_BACK' ).
+  enddo.
+
+  " Salir: de la clase (pasando otra vez por el editor basado en fuente) y de SE24
+  ref_bdc->dynpro( program = 'SAPLSEOD' dynpro = '2000'
+        )->okcode( '=WB_BACK' ).
+  if p_srce = abap_true.
+    ref_bdc->dynpro( program = 'SAPLSEO_CLASS_EDITOR' dynpro = '0400'
+          )->okcode( '/EWB_BACK' ).
+  endif.
+  ref_bdc->dynpro( program = 'SAPLSEOD' dynpro = '1000'
+        )->okcode( '=WB_BACK' ).
+
+  " El recorrido completo sale de SE24, así que basta con SY-SUBRC = 0 y sin errores
   data(ok) = ref_bdc->call( ).
 
   ref_log->add_msg( msgid = 'ZCL_BDC'
